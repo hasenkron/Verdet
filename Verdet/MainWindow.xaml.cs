@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
+using System.Collections.Generic;
 
 
 namespace Verdet
@@ -15,6 +16,9 @@ namespace Verdet
         public MainWindow()
         {
             InitializeComponent();
+            string[] test = { "hasenkron", "g36443144s" };
+            
+            List<User> liste = Helper.Database.GetUsers(GetUsersFrom.All,test);
         }
         
         

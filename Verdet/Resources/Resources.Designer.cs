@@ -22,14 +22,14 @@ namespace Verdet.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Verdet.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Verdet.Resources.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Verdet.Resources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,24 @@ namespace Verdet.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Sadece ingilizce karakter, sayı, alt tire ve nokta kullanabilirsiniz. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string ControlOnylEnglish {
+            get {
+                return ResourceManager.GetString("ControlOnylEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Kullanıcı adı en az {0}, en fazla {1} karakter olabilir. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string ControlTextLength {
+            get {
+                return ResourceManager.GetString("ControlTextLength", resourceCulture);
             }
         }
     }

@@ -61,7 +61,7 @@ namespace Verdet.Properties {
         }
         
         /// <summary>
-        ///    benzeri yerelleştirilmiş bir dize arar.
+        ///   asd benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string String1 {
             get {
