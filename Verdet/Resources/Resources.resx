@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ControlOnylEnglish" xml:space="preserve">
+    <value>Sadece ingilizce karakter, sayı, alt tire ve nokta kullanabilirsiniz.</value>
+  </data>
+  <data name="ControlTextLength" xml:space="preserve">
+    <value>Kullanıcı adı en az {0}, en fazla {1} karakter olabilir.</value>
+  </data>
 </root>
