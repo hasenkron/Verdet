@@ -1,11 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Verdet.Helper
+namespace Verdet
 {
-    /// <summary>
-    /// Kontrol mekanizmaları bu sınıfta yer alır.
-    /// <EN>Control mechanisms are included in this class.</EN>
-    /// </summary>
 
     class Control
     {
@@ -15,10 +11,9 @@ namespace Verdet.Helper
 
         /// <summary>
         /// Eğer girilen değerin uzunluğu TextLengthMin ile TextLengthMax arasında ise bu metod true döndürür.
-        /// <EN>If value length between TextLengthMin or TextLengthMax this method return true.</EN>
+        /// If value length between TextLengthMin or TextLengthMax this method return true.
         /// </summary>
-        /// <param name="str">Kontrol edilecek değer.
-        /// <EN>Value to be checked.</EN></param>
+        /// <param name="str">Kontrol edilecek değer. Value to be checked.</param>
         /// <returns>Bool</returns>
 
         public static bool TextLength(string str)
@@ -29,12 +24,12 @@ namespace Verdet.Helper
                 return false;
         }
 
-     
 
-        
+
+
         /// <summary>
-        /// Eğer girilen değer ingilizce karakter içermiyorsa veya boşluk var ise bu metod true döndürür. Sayı, alttire ve nokta false döndürür.
-        /// <EN>If value contains non-English character or space, this method return true. Number, underscore and dot return false.</EN>
+        /// Eğer girilen değer ingilizce karakter içermiyorsa veya boşluk var ise bu metod true döndürür. Sayı, alttire ve nokta false döndürür.<para>
+        /// If value contains non-English character or space, this method return true. Number, underscore and dot return false.</para>
         /// </summary>
         /// <param name="str">Value to be checked.</param>
         /// <returns>Bool</returns>

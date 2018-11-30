@@ -25,10 +25,19 @@ namespace Verdet.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("db")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Seferi\\Repos\\Verdet\\Verdet\\db\\Users.mdf")]
         public string dbPath {
             get {
                 return ((string)(this["dbPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True")]
+        public string dbConnString {
+            get {
+                return ((string)(this["dbConnString"]));
             }
         }
     }

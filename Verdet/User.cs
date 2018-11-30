@@ -16,7 +16,7 @@ namespace Verdet
         public int Onlinestatus { get; set; }
         public string Password { get; set; }
         public int IsDeleted { get; set; }
+
     }
 
-    
 }

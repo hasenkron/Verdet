@@ -17,21 +17,5 @@ namespace Verdet
         User  = 0,
         Admin = 1,
     }
-
     
-    public enum GetUsersFrom
-    {
-        All,
-        UsernameAndPassword,
-        NameAndSurname,
-        Id,
-        UserName,
-        Name,
-        Surname,
-        Role,
-        TeamId,
-        OnlineStatus,
-        Password,
-        IsDeleted
-    }
 }

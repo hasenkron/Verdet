@@ -16,9 +16,22 @@ namespace Verdet
         public MainWindow()
         {
             InitializeComponent();
-            string[] test = { "hasenkron", "g36443144s" };
+
             
-            List<User> liste = Helper.Database.GetUsers(GetUsersFrom.All,test);
+
+            //User add = new User();
+            //add.Name = "testiye";
+            //add.Surname = "testi";
+            //add.Username = "xd";
+            //add.Password = "lul";
+            //Helper.Database.AddUser(add);
+            string[] test = {"Username"};
+            string[] test2 = { "test" };
+            User guncelle = new User();
+            List<User> liste = Database.GetUsers(test,test2);
+            guncelle = liste[0];
+            guncelle.Name = "güncellendi";
+            Database.UpdateUser(guncelle);
         }
         
         
