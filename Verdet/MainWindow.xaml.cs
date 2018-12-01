@@ -17,16 +17,12 @@ namespace Verdet
         {
             InitializeComponent();
 
-            
 
-            //User add = new User();
-            //add.Name = "testiye";
-            //add.Surname = "testi";
-            //add.Username = "xd";
-            //add.Password = "lul";
-            //Helper.Database.AddUser(add);
-            string[] test = {"Username"};
-            string[] test2 = { "test" };
+
+
+            string[] test = { "test1", "tewsstr" };
+            string[] test2 = {"test","test2"};
+            string[] test3 = {"AND"};
             User guncelle = new User();
             List<User> liste = Database.GetUsers(test,test2);
             guncelle = liste[0];

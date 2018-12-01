@@ -14,8 +14,16 @@ namespace Verdet
 
     public enum RoleType
     {
-        User  = 0,
-        Admin = 1,
+        User     = 0,
+        Recorder = 1,
+        Manager  = 2,
+        Admin    = 3
     }
     
+    public enum UserStatus
+    {
+        Active  = 0,
+        Deleted = 1
+    }
+
 }

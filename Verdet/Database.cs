@@ -25,8 +25,8 @@ namespace Verdet
                 };
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand
-                      ("insert into Users(Username, Password, Name, Surname, Role, TeamId)" +
-                      " values (@Username,@Password, @Name, @Surname, @Role, @TeamId)", connect))
+                      ("insert into Users(Username, Password, Name, Surname, Role, TeamId, RegDate)" +
+                      " values (@Username,@Password, @Name, @Surname, @Role, @TeamId, @RegDate)", connect))
                 {
                     cmd.Parameters.AddWithValue("@Username", user.Username);
                     cmd.Parameters.AddWithValue("@Password", user.Password);
@@ -34,7 +34,7 @@ namespace Verdet
                     cmd.Parameters.AddWithValue("@Surname", user.Surname);
                     cmd.Parameters.AddWithValue("@Role", user.Role);
                     cmd.Parameters.AddWithValue("@TeamId", user.TeamId);
-                    
+                    cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
 
                     cmd.ExecuteNonQuery();
                 }//SqlCommand using end.
@@ -49,11 +49,13 @@ namespace Verdet
 
         /// <summary>
         /// Tüm kullanıcıları çağırmak için sütun ve değer null olmalıdır. Birden fazla sütun AND operatörü ile birleştirilir.
+        /// columns ve values değerlerinin uzunlukları birbirine eşit olmalıdır, değilse tüm kullanıcılar çağırılır.
         /// Sütun adları Database.GetColumns ile çekilebilir. 
         /// 
         /// <para>
         /// The column and value must be NULL to call all users.
         /// Multiple columns are combined with the AND operator.
+        /// The lengths of columns and values should be equal to each other. If not, all users are called.
         /// Column names can be taken with Database.GetColumns. 
         /// </para></summary>
         /// 
@@ -73,11 +75,9 @@ namespace Verdet
         /// </returns>
         public static List<User> GetUsers(string[] colunms, string[] values)
         {
-            List<User> userList = new List<User>();
-            string cmdString = "SELECT * FROM Users WHERE ";
-
             #region cmdString manipulate.
-            if (colunms == null || colunms.Length==0)
+            string cmdString = "SELECT * FROM Users WHERE ";
+            if (colunms == null || colunms.Length==0 || values == null || values.Length == 0 || colunms.Length!=values.Length)
                 cmdString = cmdString.Remove(20);
             else
             {
@@ -92,12 +92,14 @@ namespace Verdet
                     cmdString = cmdString.Remove(cmdString.Length - 4, 4);
             }
             #endregion
-
             SqlConnection connect = null;
+            List<User> userList = new List<User>();
             try
             {
-                connect = new SqlConnection();
-                connect.ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath);
+                connect = new SqlConnection
+                {
+                    ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath)
+                };
                 connect.Open();
 
                 using (SqlCommand cmd = new SqlCommand(cmdString, connect))
@@ -106,18 +108,16 @@ namespace Verdet
                    
                     while(reader.Read())
                     {
-                        User add = new User
-                        {
-                            Id = reader.GetInt32(0),
-                            Username = reader.GetString(1),
-                            Password = reader.GetString(2),
-                            Name = reader.GetString(3),
-                            Surname = reader.GetString(4),
-                            Role = reader.GetInt32(5),
-                            Onlinestatus = reader.GetInt32(6),
-                            TeamId = reader.GetInt32(7),
-                            IsDeleted = reader.GetInt32(8)
-                        };
+                        User add = new User();
+                        add.SetId(reader.GetInt32(0));
+                        add.Username = reader.GetString(1);
+                        add.Password = reader.GetString(2);
+                        add.Name = reader.GetString(3);
+                        add.Surname = reader.GetString(4);
+                        add.Role = reader.GetInt32(5);
+                        add.Onlinestatus = reader.GetInt32(6);
+                        add.TeamId = reader.GetInt32(7);
+                        add.IsDeleted = reader.GetInt32(8);
 
                         userList.Add(add);
 
@@ -132,6 +132,14 @@ namespace Verdet
             return userList;
         }
 
+        /// <summary>
+        /// Id değeri değiştirilmemelidir.
+        /// Kullanıcıyı silmek için IsDeleted 1 gönderilmelidir.
+        /// 
+        /// Id value should not be changed.
+        /// IsDeleted 1 must be sent to delete the user.
+        /// </summary>
+        /// <param name="update"></param>
         public static void UpdateUser(User update)
         {
             SqlConnection connect = null;
@@ -165,6 +173,7 @@ namespace Verdet
                     connect.Dispose();
             }
         }
+        
         /// <summary>
         /// Sütun isimlerini getirir.
         /// </summary>
@@ -197,5 +206,6 @@ namespace Verdet
             }
             return columns;
         }
+
     }
 }
