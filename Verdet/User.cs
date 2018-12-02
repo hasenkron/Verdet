@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,18 +8,7 @@ namespace Verdet
 {
     class User
     {
-        private int id;
-        /// <summary>
-        /// Id veritabanı tarafından otomatik belirlenir, değişiklik yapılmamalıdır. <para>
-        /// Id is automatically determined by the database, no changes should be made. </para>
-        /// </summary>
-        /// 
-        public int Id { get => id;}
-        /// <summary>
-        /// Sadece veritabanından id değeri çağırılırken kullanılmalıdır. <para>
-        /// It should only be used when calling the id value from the database. </para>
-        /// </summary>
-        public void SetId(int set) => id = set;
+        public int Id { get; private set;}
         public string Username { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -27,6 +17,23 @@ namespace Verdet
         public int Onlinestatus { get; set; }
         public string Password { get; set; }
         public int IsDeleted { get; set; }
+
+        public static User GetUser(SqlDataReader reader)
+        {
+            User get = new User
+            {
+                Id = reader.GetInt32(0),
+                Username = reader.GetString(1),
+                Password = reader.GetString(2),
+                Name = reader.GetString(3),
+                Surname = reader.GetString(4),
+                Role = reader.GetInt32(5),
+                Onlinestatus = reader.GetInt32(6),
+                TeamId = reader.GetInt32(7),
+                IsDeleted = reader.GetInt32(8)
+            };
+            return get;
+        }
     }
 
 

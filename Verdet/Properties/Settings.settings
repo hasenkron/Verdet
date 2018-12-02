@@ -2,11 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Verdet.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="dbPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">D:\Seferi\Repos\Verdet\Verdet\db\Users.mdf</Value>
-    </Setting>
     <Setting Name="dbConnString" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\db\Users.mdf;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

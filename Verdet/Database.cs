@@ -19,10 +19,7 @@ namespace Verdet
             SqlConnection connect = null;
             try
             {
-                connect = new SqlConnection
-                {
-                    ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath)
-                };
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand
                       ("insert into Users(Username, Password, Name, Surname, Role, TeamId, RegDate)" +
@@ -47,81 +44,28 @@ namespace Verdet
         }
 
 
-        /// <summary>
-        /// Tüm kullanıcıları çağırmak için sütun ve değer null olmalıdır. Birden fazla sütun AND operatörü ile birleştirilir.
-        /// columns ve values değerlerinin uzunlukları birbirine eşit olmalıdır, değilse tüm kullanıcılar çağırılır.
-        /// Sütun adları Database.GetColumns ile çekilebilir. 
-        /// 
-        /// <para>
-        /// The column and value must be NULL to call all users.
-        /// Multiple columns are combined with the AND operator.
-        /// The lengths of columns and values should be equal to each other. If not, all users are called.
-        /// Column names can be taken with Database.GetColumns. 
-        /// </para></summary>
-        /// 
-        /// <param name="colunms">
-        /// Sütun veya sütunlar
-        /// Column or columns
-        /// </param>
-        /// 
-        /// <param name="values">
-        /// Aranacak değer veya  değerler.
-        /// Value/values to be search
-        /// </param>
-        /// 
-        /// <returns>
-        /// Liste boş dönüyorsa değer bulunamamış demektir.
-        /// If the list returns empty, the value is not found.
-        /// </returns>
-        public static List<User> GetUsers(string[] colunms, string[] values)
+
+        public static List<User> GetUsers()
         {
-            #region cmdString manipulate.
-            string cmdString = "SELECT * FROM Users WHERE ";
-            if (colunms == null || colunms.Length==0 || values == null || values.Length == 0 || colunms.Length!=values.Length)
-                cmdString = cmdString.Remove(20);
-            else
-            {
-                for (int i = 0; i < colunms.Length; i++)
-                {
-                    if (colunms.Length == 1)
-                        cmdString += string.Format("{0}='{1}'", colunms[i], values[i]);
-                    else
-                        cmdString += string.Format("{0}='{1}' AND ", colunms[i], values[i]);
-                }
-                if (colunms.Length > 1)
-                    cmdString = cmdString.Remove(cmdString.Length - 4, 4);
-            }
-            #endregion
+            string cmdString = null;
+
+            //string cmdString = BuildCmdString("Users", colunms, values, operators);
             SqlConnection connect = null;
             List<User> userList = new List<User>();
             try
             {
-                connect = new SqlConnection
-                {
-                    ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath)
-                };
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
                 connect.Open();
 
-                using (SqlCommand cmd = new SqlCommand(cmdString, connect))
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users", connect))
                 {
                     SqlDataReader reader = cmd.ExecuteReader();
-                   
-                    while(reader.Read())
+
+                    while (reader.Read())
                     {
-                        User add = new User();
-                        add.SetId(reader.GetInt32(0));
-                        add.Username = reader.GetString(1);
-                        add.Password = reader.GetString(2);
-                        add.Name = reader.GetString(3);
-                        add.Surname = reader.GetString(4);
-                        add.Role = reader.GetInt32(5);
-                        add.Onlinestatus = reader.GetInt32(6);
-                        add.TeamId = reader.GetInt32(7);
-                        add.IsDeleted = reader.GetInt32(8);
-
+                        User add = User.GetUser(reader);
                         userList.Add(add);
-
-                    }//While end.
+                    }
                 }//SqlCommand using end.
             }//Try end.
             finally
@@ -130,6 +74,39 @@ namespace Verdet
                     connect.Dispose();
             }
             return userList;
+        }
+
+        public static List<User> GetUsers(GetUsersFrom type)
+        {
+
+            return null;
+        }
+
+        
+
+        private static string BuildCmdString(string tableName, string[] colunms, string[] values, string[] operators)
+        {
+            
+
+            string[] opfix = new string[operators.Length + 1];
+            Array.Copy(operators, opfix, operators.Length);
+            string cmdString = string.Format("SELECT * FROM {0} WHERE ", tableName);
+            if (colunms == null || colunms.Length == 0 || values == null || values.Length == 0)
+                cmdString = cmdString.Remove(20);
+            else
+            {
+                for (int i = 0; i < colunms.Length; i++)
+                {
+                    if (colunms.Length == 1)
+                        cmdString += string.Format("{0}='{1}'", colunms[i], values[i]);
+                    else
+                        cmdString += string.Format("{0}='{1}' {2} ", colunms[i], values[i],opfix[i]);
+                }
+                //if (colunms.Length > 1)
+                //    cmdString = cmdString.Remove(cmdString.Length - 4, 4);
+            }
+            
+            return cmdString;
         }
 
         /// <summary>
@@ -145,10 +122,7 @@ namespace Verdet
             SqlConnection connect = null;
             try
             {
-                connect = new SqlConnection
-                {
-                    ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath)
-                };
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
                 connect.Open();
                 using (SqlCommand cmd = new SqlCommand
                       ("UPDATE Users SET Username=@Username, Password=@Password, Name=@Name, Surname=@Surname, Role=@Role," +
@@ -186,10 +160,7 @@ namespace Verdet
             string cmdString = string.Format("SELECT * FROM {0} ", tableName);
             try
             {
-                connect = new SqlConnection
-                {
-                    ConnectionString = string.Format(Properties.Settings.Default.dbConnString, Properties.Settings.Default.dbPath)
-                };
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
                 connect.Open();
 
                 using (SqlCommand cmd = new SqlCommand(cmdString, connect))
@@ -207,5 +178,9 @@ namespace Verdet
             return columns;
         }
 
+        public static List<Data> GetData()
+        {
+            return null;
+        }
     }
 }
