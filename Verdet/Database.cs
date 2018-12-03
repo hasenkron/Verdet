@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Configuration;
+
 
 namespace Verdet
 {
@@ -44,29 +47,35 @@ namespace Verdet
         }
 
 
-
-        public static List<User> GetUsers()
+        
+        public static List<User> GetUsers(string[] columns, string[]values, bool isDeleted)
         {
-            string cmdString = null;
-
-            //string cmdString = BuildCmdString("Users", colunms, values, operators);
             SqlConnection connect = null;
             List<User> userList = new List<User>();
             try
             {
                 connect = new SqlConnection(Properties.Settings.Default.dbConnString);
                 connect.Open();
-
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users", connect))
+                using (SqlCommand cmd = new SqlCommand("GetUsers",connect))
                 {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    
+                    for (int i = 0; i < columns.Length; i++)
+                    {
+                        cmd.Parameters.AddWithValue("@" + columns[i],values[i]);
+                    }
+                    if (isDeleted)
+                        cmd.Parameters.AddWithValue("@IsDeleted", 1);
+                    else
+                        cmd.Parameters.AddWithValue("@IsDeleted", 0);
+
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        User add = User.GetUser(reader);
-                        userList.Add(add);
+                        userList.Add(User.GetUser(reader));
                     }
-                }//SqlCommand using end.
+                }
             }//Try end.
             finally
             {
@@ -76,44 +85,12 @@ namespace Verdet
             return userList;
         }
 
-        public static List<User> GetUsers(GetUsersFrom type)
-        {
 
-            return null;
-        }
-
-        
-
-        private static string BuildCmdString(string tableName, string[] colunms, string[] values, string[] operators)
-        {
-            
-
-            string[] opfix = new string[operators.Length + 1];
-            Array.Copy(operators, opfix, operators.Length);
-            string cmdString = string.Format("SELECT * FROM {0} WHERE ", tableName);
-            if (colunms == null || colunms.Length == 0 || values == null || values.Length == 0)
-                cmdString = cmdString.Remove(20);
-            else
-            {
-                for (int i = 0; i < colunms.Length; i++)
-                {
-                    if (colunms.Length == 1)
-                        cmdString += string.Format("{0}='{1}'", colunms[i], values[i]);
-                    else
-                        cmdString += string.Format("{0}='{1}' {2} ", colunms[i], values[i],opfix[i]);
-                }
-                //if (colunms.Length > 1)
-                //    cmdString = cmdString.Remove(cmdString.Length - 4, 4);
-            }
-            
-            return cmdString;
-        }
+      
 
         /// <summary>
-        /// Id değeri değiştirilmemelidir.
         /// Kullanıcıyı silmek için IsDeleted 1 gönderilmelidir.
         /// 
-        /// Id value should not be changed.
         /// IsDeleted 1 must be sent to delete the user.
         /// </summary>
         /// <param name="update"></param>
@@ -148,35 +125,6 @@ namespace Verdet
             }
         }
         
-        /// <summary>
-        /// Sütun isimlerini getirir.
-        /// </summary>
-        /// <param name="tableName">Tablo adı</param>
-        /// <returns></returns>
-        public static string[] GetColumns(string tableName)
-        {
-            string[] columns;
-            SqlConnection connect = null;
-            string cmdString = string.Format("SELECT * FROM {0} ", tableName);
-            try
-            {
-                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
-                connect.Open();
-
-                using (SqlCommand cmd = new SqlCommand(cmdString, connect))
-                {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToArray();
-
-                }//SqlCommand using end.
-            }//Try end.
-            finally
-            {
-                if (connect != null)
-                    connect.Dispose();
-            }
-            return columns;
-        }
 
         public static List<Data> GetData()
         {

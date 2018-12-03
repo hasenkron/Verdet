@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Collections.Generic;
+using System;
 
 
 namespace Verdet
@@ -17,22 +18,18 @@ namespace Verdet
         {
             InitializeComponent();
 
-
-
-
-            string[] test = { "Name","test"};
-            string[] test2 = {"gökhan","asd"};
-            string[] test3 = {"OR"};
+            string[] test = { "Username"};
+            string[] test2 = {"test"};
+            //string[] test3 = {"OR"};
             User guncelle = new User();
-            
-           
-            //List<User> liste = Database.GetUsers(test,test2,test3);
-            //guncelle = liste[0];
-            //guncelle.Name = "güncellendi";
-            //Database.UpdateUser(guncelle);
+
+            List<User> liste = Database.GetUsers(test,test2,false);
+            guncelle = liste[0];
+            guncelle.Name = "güncellendi";
+            Database.UpdateUser(guncelle);
         }
-        
-        
+
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             
