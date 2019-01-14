@@ -26,15 +26,4 @@ namespace Verdet
         Deleted = 1
     }
 
-    public enum GetUsersFrom
-    {
-        All = 0,
-        Username = 1,
-        UsernameAndPassword = 3,
-        Role = 4,
-        OnlineStatus = 5,
-        TeamId = 6,
-        IsDeleted = 7
-    }
-
 }

@@ -17,6 +17,7 @@ namespace Verdet
         public int Onlinestatus { get; set; }
         public string Password { get; set; }
         public int IsDeleted { get; set; }
+        public DateTime RegDate { get; set; }
 
         public static User GetUser(SqlDataReader reader)
         {
@@ -30,7 +31,8 @@ namespace Verdet
                 Role = reader.GetInt32(5),
                 Onlinestatus = reader.GetInt32(6),
                 TeamId = reader.GetInt32(7),
-                IsDeleted = reader.GetInt32(8)
+                IsDeleted = reader.GetInt32(8),
+                RegDate = reader.GetDateTime(9)
             };
             return get;
         }

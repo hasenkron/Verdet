@@ -18,6 +18,8 @@ namespace Verdet
         public int RecorderId { get; set; }
         public DateTime UpdateDate { get; set; }
         public string UpdateDesc { get; set; }
+        public int IsDeleted { get; set; }
+        public string DeleteDesc { get; set; }
 
         public static Data GetData(SqlDataReader reader)
         {
@@ -31,7 +33,9 @@ namespace Verdet
                 ReasonDesc = reader.GetString(5),
                 RecorderId = reader.GetInt32(6),
                 UpdateDate = reader.GetDateTime(7),
-                UpdateDesc = reader.GetString(8)
+                UpdateDesc = reader.GetString(8),
+                IsDeleted = reader.GetInt32(9),
+                DeleteDesc = reader.GetString(10)
             };
             return get;
         }

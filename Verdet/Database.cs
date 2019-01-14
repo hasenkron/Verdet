@@ -46,9 +46,9 @@ namespace Verdet
             }
         }
 
+       
 
-        
-        public static List<User> GetUsers(string[] columns, string[]values, bool isDeleted)
+        public static List<User> GetUsers(string[] columns, object[]values, bool isDeleted)
         {
             SqlConnection connect = null;
             List<User> userList = new List<User>();
@@ -59,10 +59,13 @@ namespace Verdet
                 using (SqlCommand cmd = new SqlCommand("GetUsers",connect))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    
-                    for (int i = 0; i < columns.Length; i++)
+
+                    if (columns != null)
                     {
-                        cmd.Parameters.AddWithValue("@" + columns[i],values[i]);
+                        for (int i = 0; i < columns.Length; i++)
+                        {
+                            cmd.Parameters.AddWithValue("@" + columns[i], values[i]);
+                        }
                     }
                     if (isDeleted)
                         cmd.Parameters.AddWithValue("@IsDeleted", 1);
@@ -124,11 +127,75 @@ namespace Verdet
                     connect.Dispose();
             }
         }
-        
 
-        public static List<Data> GetData()
+        public static void AddData(Data data)
         {
-            return null;
+            data.ReasonId = (data.ReasonId == null || data.ReasonId.Length == 0) ? "0" : data.ReasonId;
+            data.ReasonDesc = (data.ReasonDesc == null || data.ReasonDesc.Length == 0) ? "0" : data.ReasonDesc;
+            SqlConnection connect = null;
+            try
+            {
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand
+                      ("insert into Data(OwnerId, RegDate, Score, ReasonId, ReasonDesc, RecorderId )" +
+                      " values (@OwnerId,@RegDate, @Score, @ReasonId, @ReasonDesc, @RecorderId)", connect))
+                {
+                    cmd.Parameters.AddWithValue("@OwnerId", data.OwnerId);
+                    cmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@Score", data.Score);
+                    cmd.Parameters.AddWithValue("@ReasonId", data.ReasonId);
+                    cmd.Parameters.AddWithValue("@ReasonDesc", data.ReasonDesc);
+                    cmd.Parameters.AddWithValue("@RecorderId", data.RecorderId);
+
+                    cmd.ExecuteNonQuery();
+                }//SqlCommand using end.
+            }//Try end.
+            finally
+            {
+                if (connect != null)
+                    connect.Dispose();
+            }
+        }
+
+        public static List<Data> GetData(string[] columns, object[] values, bool isDeleted)
+        {
+            SqlConnection connect = null;
+            List<Data> data = new List<Data>();
+            try
+            {
+                connect = new SqlConnection(Properties.Settings.Default.dbConnString);
+                connect.Open();
+                using (SqlCommand cmd = new SqlCommand("GetData", connect))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    if (columns != null)
+                    {
+                        for (int i = 0; i < columns.Length; i++)
+                        {
+                            cmd.Parameters.AddWithValue("@" + columns[i], values[i]);
+                        }
+                    }
+                    if (isDeleted)
+                        cmd.Parameters.AddWithValue("@IsDeleted", 1);
+                    else
+                        cmd.Parameters.AddWithValue("@IsDeleted", 0);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        data.Add(Data.GetData(reader));
+                    }
+                }
+            }//Try end.
+            finally
+            {
+                if (connect != null)
+                    connect.Dispose();
+            }
+            return data;
         }
     }
 }

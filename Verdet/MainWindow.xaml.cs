@@ -18,15 +18,11 @@ namespace Verdet
         {
             InitializeComponent();
 
-            string[] test = { "Username"};
-            string[] test2 = {"test"};
-            //string[] test3 = {"OR"};
-            User guncelle = new User();
-
-            List<User> liste = Database.GetUsers(test,test2,false);
-            guncelle = liste[0];
-            guncelle.Name = "güncellendi";
-            Database.UpdateUser(guncelle);
+            Data test = new Data
+            {
+                OwnerId = 1
+            };
+            Database.AddData(test);
         }
 
 
